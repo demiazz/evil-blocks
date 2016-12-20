@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const rollup = require('rollup');
+const commonJS = require('rollup-plugin-commonjs');
 const buble = require('rollup-plugin-buble');
 const uglify = require('rollup-plugin-uglify');
 const saveLicense = require('uglify-save-license');
@@ -38,13 +39,17 @@ function createConfig(target) {
     entry: 'src/index.js',
     exports: 'named',
 
-    plugins: [buble()],
+    plugins: [commonJS(), buble()],
   };
 
   const writeOptions = {
     moduleId: 'evil-blocks',
     moduleName: 'evilBlocks',
     sourceMap: false,
+    globals: {
+      jquery: 'jQuery',
+      lighty: 'lighty',
+    },
   };
 
   if (target === 'commonjs') {
