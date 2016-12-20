@@ -444,6 +444,10 @@ evil.block '@@docs',
     @openInFancybox(@example)
 ```
 
+<!-- API: BEGIN -->
+
+<!-- API: END -->
+
 ## Install
 
 ### Ruby on Rails
