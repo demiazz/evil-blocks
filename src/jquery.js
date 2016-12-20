@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import transformSelector from './transform-selector';
+import { transformSelector } from './utils';
 
 
 function rewriteSelector(context, name, position) {
