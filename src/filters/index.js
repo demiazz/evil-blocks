@@ -1,4 +1,5 @@
 import find from './find';
+import role from './role';
 
 
-export default [find];
+export default [find, role];

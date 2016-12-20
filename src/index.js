@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import createEngine from 'lighty';
 
+import './jquery';
 import { transformSelector, clone } from './utils';
 import filters from './filters';
 
