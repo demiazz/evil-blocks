@@ -13,7 +13,7 @@ describe('block alias', () => {
 
     fixture(`<div class="${elementClass}"></div>`);
 
-    block('.block-alias', {
+    block(`.${elementClass}`, {
       init() {
         expect(this.block.length).toEqual(1);
         expect(this.block[0]).toEqual($(`.${elementClass}`)[0]);
