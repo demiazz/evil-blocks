@@ -6,6 +6,10 @@ function clone(source) {
   }, { });
 }
 
+const startsWith = String.prototype.startsWith
+  ? (string, substring) => string.startsWith(substring)
+  : (string, substring) => string.substr(0, substring.length) === substring;
+
 function transformSelector(selector) {
   return selector
     .replace(/@@([\w\u00c0-\uFFFF-]+)/g, '[data-block~="$1"]')
@@ -13,4 +17,4 @@ function transformSelector(selector) {
 }
 
 
-export { clone, transformSelector };
+export { clone, startsWith, transformSelector };
