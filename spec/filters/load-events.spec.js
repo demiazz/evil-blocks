@@ -1,28 +1,26 @@
 import $ from 'jquery';
 
-import { block, vitalize } from '../../src';
+import { block } from '../../src';
 
 import { fixture, clear } from '../fixture';
 
 
 describe('filters', () => {
   describe('load events', () => {
+    const blockName = 'loadEvents';
+
     afterEach(clear);
 
     it('adds support for `load on window` pattern', (done) => {
-      const blockClass = 'load-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`.${blockClass}`, {
+      block(`@@${blockName}`, {
         'load on window': eventSpy,
       });
-
-      vitalize();
 
       expect(eventSpy).not.toHaveBeenCalled();
 
@@ -34,25 +32,21 @@ describe('filters', () => {
     });
 
     it('calls handler on a component instance', (done) => {
-      const blockClass = 'load-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
       let component;
 
-      block(`.${blockClass}`, {
+      block(`@@${blockName}`, {
         init() {
           component = this;
         },
 
         'load on window': eventSpy,
       });
-
-      vitalize();
 
       expect(eventSpy).not.toHaveBeenCalled();
       expect(component).toBeTruthy();
@@ -66,19 +60,15 @@ describe('filters', () => {
     });
 
     it('passes an event to a handler', (done) => {
-      const blockClass = 'load-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`.${blockClass}`, {
+      block(`@@${blockName}`, {
         'load on window': eventSpy,
       });
-
-      vitalize();
 
       expect(eventSpy).not.toHaveBeenCalled();
 

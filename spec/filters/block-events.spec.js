@@ -7,74 +7,68 @@ import { fixture, clear } from '../fixture';
 
 describe('filters', () => {
   describe('block events', () => {
+    const blockName = 'blockEvents';
+    const blockSelector = `@@${blockName}`;
+
     afterEach(clear);
 
     it('adds support for `on <event>` pattern`', () => {
-      const blockClass = 'block-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`.${blockClass}`, {
+      block(blockSelector, {
         'on click': eventSpy,
         'on custom-event': eventSpy,
       });
 
-      vitalize();
-
       expect(eventSpy).not.toHaveBeenCalled();
 
-      $(`.${blockClass}`).trigger('click');
+      $(blockSelector).trigger('click');
 
       expect(eventSpy).toHaveBeenCalledTimes(1);
 
-      $(`.${blockClass}`).trigger('custom-event');
+      $(blockSelector).trigger('custom-event');
 
       expect(eventSpy).toHaveBeenCalledTimes(2);
     });
 
     it('adds support for `on <event>[ <event> ...]` pattern`', () => {
-      const blockClass = 'block-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`.${blockClass}`, {
+      block(blockSelector, {
         'on click custom-event': eventSpy,
       });
 
-      vitalize();
-
       expect(eventSpy).not.toHaveBeenCalled();
 
-      $(`.${blockClass}`).trigger('click');
+      $(blockSelector).trigger('click');
 
       expect(eventSpy).toHaveBeenCalledTimes(1);
 
-      $(`.${blockClass}`).trigger('custom-event');
+      $(blockSelector).trigger('custom-event');
 
       expect(eventSpy).toHaveBeenCalledTimes(2);
     });
 
     it("calls handler only when a block is event's target", () => {
-      const blockClass = 'block-events';
       const childrenRole = 'children';
 
       fixture(`
-        <div class="${blockClass}">
+        <div data-block="${blockName}">
           <div data-role="${childrenRole}"></div>
         </div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`${blockClass}`, {
+      block(`${blockName}`, {
         'on click': eventSpy,
       });
 
@@ -86,17 +80,15 @@ describe('filters', () => {
     });
 
     it('calls handler on a component instance', () => {
-      const blockClass = 'block-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy('event');
 
       let component;
 
-      block(`.${blockClass}`, {
+      block(blockSelector, {
         init() {
           component = this;
         },
@@ -104,65 +96,55 @@ describe('filters', () => {
         'on click': eventSpy,
       });
 
-      vitalize();
-
       expect(eventSpy).not.toHaveBeenCalled();
       expect(component).toBeTruthy();
 
-      $(`.${blockClass}`).trigger('click');
+      $(blockSelector).trigger('click');
 
       expect(eventSpy).toHaveBeenCalledTimes(1);
       expect(eventSpy.calls.all()[0].object).toBe(component);
     });
 
     it('passes an event to a handler', () => {
-      const blockClass = 'block-events';
-
       fixture(`
-        <div class="${blockClass}"></div>
+        <div data-block="${blockName}"></div>
       `);
 
       const eventSpy = jasmine.createSpy();
 
-      block(`.${blockClass}`, {
+      block(blockSelector, {
         'on click': eventSpy,
       });
 
-      vitalize();
-
       expect(eventSpy).not.toHaveBeenCalled();
 
-      $(`.${blockClass}`).trigger('click');
+      $(blockSelector).trigger('click');
 
       expect(eventSpy).toHaveBeenCalledTimes(1);
       expect(eventSpy.calls.argsFor(0)[0] instanceof $.Event).toBe(true);
     });
 
     it('passes an event data to a handler', () => {
-      const blockClass = 'block-events';
-
-      fixture(`<div class="${blockClass}"></div>`);
+      fixture(`<div data-block="${blockName}"></div>`);
 
       const singleArg = { single: 'argument' };
       const multipleArgs = [{ multiple: 'arguments' }, 2];
 
       const eventSpy = jasmine.createSpy('event');
 
-      block(`.${blockClass}`, {
+      block(blockSelector, {
         'on single': eventSpy,
         'on multiple': eventSpy,
       });
 
-      vitalize();
-
       expect(eventSpy).not.toHaveBeenCalled();
 
-      $(`.${blockClass}`).trigger('single', singleArg);
+      $(blockSelector).trigger('single', singleArg);
 
       expect(eventSpy).toHaveBeenCalledTimes(1);
       expect(eventSpy.calls.argsFor(0).slice(1)).toEqual([singleArg]);
 
-      $(`.${blockClass}`).trigger('multiple', multipleArgs);
+      $(blockSelector).trigger('multiple', multipleArgs);
 
       expect(eventSpy).toHaveBeenCalledTimes(2);
       expect(eventSpy.calls.argsFor(1).slice(1)).toEqual(multipleArgs);

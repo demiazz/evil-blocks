@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { block, vitalize } from '../src';
+import { block } from '../src';
 
 import { fixture, clear } from './fixture';
 
@@ -8,20 +8,22 @@ import { fixture, clear } from './fixture';
 describe('block alias', () => {
   afterEach(clear);
 
-  it('adds `this.block` alias for `$(node)`', (done) => {
-    const blockClass = 'block-alias';
+  it('adds `this.block` alias for `$(node)`', () => {
+    const blockName = 'blockAlias';
 
-    fixture(`<div class="${blockClass}"></div>`);
+    fixture(`
+      <div data-block="${blockName}"></div>
+    `);
 
-    block(`.${blockClass}`, {
+    let blockElement;
+
+    block(`@@${blockName}`, {
       init() {
-        expect(this.block.length).toEqual(1);
-        expect(this.block[0]).toEqual($(`.${blockClass}`)[0]);
-
-        done();
+        blockElement = this.block;
       },
     });
 
-    vitalize();
+    expect(blockElement.length).toEqual(1);
+    expect(blockElement[0]).toEqual($(`@@${blockName}`)[0]);
   });
 });

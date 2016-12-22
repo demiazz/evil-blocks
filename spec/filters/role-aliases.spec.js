@@ -1,14 +1,15 @@
-import { block, vitalize } from '../../src';
+import { block } from '../../src';
 
 import { fixture, clear } from '../fixture';
 
 
 describe('filters', () => {
   describe('role aliases', () => {
+    const blockName = 'roleAliases';
+
     afterEach(clear);
 
-    it('adds `.<role>` property for each `[data-role~="<role>"]` element', (done) => {
-      const blockClass = 'role-filter';
+    it('adds `.<role>` property for each `[data-role~="<role>"]` element', () => {
       const singleRole = 'single';
       const multiRole = 'multi';
       const customRole = 'customRole';
@@ -19,7 +20,7 @@ describe('filters', () => {
         <div data-role="${multiRole}"></div>
         <div data-role="${customRole}"></div>
         <div data-role="${yetAnotherRole}"></div>
-        <div class="${blockClass}">
+        <div data-block="${blockName}">
           <div data-role="${singleRole}"></div>
           <div data-role="${multiRole} other"></div>
           <div data-role="${multiRole}"></div>
@@ -35,52 +36,51 @@ describe('filters', () => {
         </div>
       `);
 
-      block(`.${blockClass}`, {
+      let component;
+
+      block(`@@${blockName}`, {
         init() {
-          expect(this[singleRole].length).toEqual(2);
-          expect(this[singleRole].toArray())
-            .toEqual(this.$(`@${singleRole}`).toArray());
-
-          expect(this[multiRole].length).toEqual(4);
-          expect(this[multiRole].toArray())
-            .toEqual(this.$(`@${multiRole}`).toArray());
-
-          expect(this[customRole].length).toEqual(2);
-          expect(this[customRole].toArray())
-            .toEqual(this.$(`@${customRole}`).toArray());
-
-          expect(this[yetAnotherRole].length).toEqual(2);
-          expect(this[yetAnotherRole].toArray())
-            .toEqual(this.$(`@${yetAnotherRole}`).toArray());
-
-          done();
+          component = this;
         },
       });
 
-      vitalize();
+      expect(component[singleRole].length).toEqual(2);
+      expect(component[singleRole].toArray())
+        .toEqual(component.$(`@${singleRole}`).toArray());
+
+      expect(component[multiRole].length).toEqual(4);
+      expect(component[multiRole].toArray())
+        .toEqual(component.$(`@${multiRole}`).toArray());
+
+      expect(component[customRole].length).toEqual(2);
+      expect(component[customRole].toArray())
+        .toEqual(component.$(`@${customRole}`).toArray());
+
+      expect(component[yetAnotherRole].length).toEqual(2);
+      expect(component[yetAnotherRole].toArray())
+        .toEqual(component.$(`@${yetAnotherRole}`).toArray());
     });
 
-    it("doesn't override existing properties", (done) => {
-      const blockClass = 'role-filter';
+    it("doesn't override existing properties", () => {
       const roleName = 'exists';
 
       fixture(`
-        <div class="${blockClass}">
+        <div data-block="${blockName}">
           <div data-role="${roleName}" />
         </div>
       `);
 
-      block(`.${blockClass}`, {
+      let component;
+
+      block(`@@${blockName}`, {
         [roleName]: 'string',
 
         init() {
-          expect(this[roleName]).toEqual('string');
-
-          done();
+          component = this;
         },
       });
 
-      vitalize();
+      expect(component[roleName]).toEqual('string');
     });
   });
 });

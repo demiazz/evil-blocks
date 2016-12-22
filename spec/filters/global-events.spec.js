@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import { block, vitalize } from '../../src';
+import { block } from '../../src';
 
 import { fixture, clear } from '../fixture';
 
@@ -13,21 +13,19 @@ describe('filters', () => {
       const element = selector === 'body' ? $(selector) : $(window);
 
       describe(`when events triggered on ${selector}`, () => {
-        it(`adds support for \`<event> on ${selector}\` pattern`, () => {
-          const blockClass = `${selector}-events`;
+        const blockName = `${selector}Events`;
 
+        it(`adds support for \`<event> on ${selector}\` pattern`, () => {
           fixture(`
-            <div class="${blockClass}"></div>
+            <div data-block="${blockName}"></div>
           `);
 
           const eventSpy = jasmine.createSpy('event');
 
-          block(`.${blockClass}`, {
+          block(`@@${blockName}`, {
             [`click on ${selector}`]: eventSpy,
             [`custom-event on ${selector}`]: eventSpy,
           });
-
-          vitalize();
 
           expect(eventSpy).not.toHaveBeenCalled();
 
@@ -41,19 +39,15 @@ describe('filters', () => {
         });
 
         it(`adds support for \`<event>[ <event> ...] on ${selector}\` pattern`, () => {
-          const blockClass = `${selector}-events`;
-
           fixture(`
-            <div class="${blockClass}"></div>
+            <div data-block="${blockName}"></div>
           `);
 
           const eventSpy = jasmine.createSpy('event');
 
-          block(`.${blockClass}`, {
+          block(`@@${blockName}`, {
             [`click custom-event on ${selector}`]: eventSpy,
           });
-
-          vitalize();
 
           expect(eventSpy).not.toHaveBeenCalled();
 
@@ -67,25 +61,21 @@ describe('filters', () => {
         });
 
         it('calls handler on a component instance', () => {
-          const blockClass = `${selector}-events`;
-
           fixture(`
-            <div class="${blockClass}"></div>
+            <div data-block="${blockName}"></div>
           `);
 
           const eventSpy = jasmine.createSpy('event');
 
           let component;
 
-          block(`.${blockClass}`, {
+          block(`@@${blockName}`, {
             init() {
               component = this;
             },
 
             [`click on ${selector}`]: eventSpy,
           });
-
-          vitalize();
 
           expect(eventSpy).not.toHaveBeenCalled();
           expect(component).toBeTruthy();
@@ -97,19 +87,15 @@ describe('filters', () => {
         });
 
         it('passes an event to a handler', () => {
-          const blockClass = `${selector}-events`;
-
           fixture(`
-            <div class="${blockClass}"></div>
+            <div data-block="${blockName}"></div>
           `);
 
           const eventSpy = jasmine.createSpy('event');
 
-          block(`.${blockClass}`, {
+          block(`@@${blockName}`, {
             [`click on ${selector}`]: eventSpy,
           });
-
-          vitalize();
 
           expect(eventSpy).not.toHaveBeenCalled();
 
@@ -120,10 +106,8 @@ describe('filters', () => {
         });
 
         it('passes an event data to a handler', () => {
-          const blockClass = `${selector}-events`;
-
           fixture(`
-            <div class="${blockClass}"></div>
+            <div data-block="${blockName}"></div>
           `);
 
           const singleArg = { single: 'argument' };
@@ -131,12 +115,10 @@ describe('filters', () => {
 
           const eventSpy = jasmine.createSpy('event');
 
-          block(`.${blockClass}`, {
+          block(`@@${blockName}`, {
             [`single on ${selector}`]: eventSpy,
             [`multiple on ${selector}`]: eventSpy,
           });
-
-          vitalize();
 
           expect(eventSpy).not.toHaveBeenCalled();
 
