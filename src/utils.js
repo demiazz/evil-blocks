@@ -10,6 +10,10 @@ const endsWith = String.prototype.endsWith
   ? (string, substring) => string.endsWith(substring)
   : (string, substring) => string.substr(-substring.length) === substring;
 
+const includes = String.prototype.includes
+  ? (string, substring) => string.includes(substring)
+  : (string, substring) => string.indexOf(substring) !== -1;
+
 const startsWith = String.prototype.startsWith
   ? (string, substring) => string.startsWith(substring)
   : (string, substring) => string.substr(0, substring.length) === substring;
@@ -21,4 +25,4 @@ function transformSelector(selector) {
 }
 
 
-export { clone, endsWith, startsWith, transformSelector };
+export { clone, endsWith, includes, startsWith, transformSelector };
