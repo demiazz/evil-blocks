@@ -6,6 +6,10 @@ function clone(source) {
   }, { });
 }
 
+const endsWith = String.prototype.endsWith
+  ? (string, substring) => string.endsWith(substring)
+  : (string, substring) => string.substr(-substring.length) === substring;
+
 const startsWith = String.prototype.startsWith
   ? (string, substring) => string.startsWith(substring)
   : (string, substring) => string.substr(0, substring.length) === substring;
@@ -17,4 +21,4 @@ function transformSelector(selector) {
 }
 
 
-export { clone, startsWith, transformSelector };
+export { clone, endsWith, startsWith, transformSelector };
