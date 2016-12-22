@@ -6,7 +6,7 @@ import { fixture, clear } from '../fixture';
 
 
 describe('filters', () => {
-  describe('global-events', () => {
+  describe('global events', () => {
     afterEach(clear);
 
     ['body', 'window'].forEach((selector) => {
