@@ -36,6 +36,8 @@ function blockEvents(component) {
     const events = property.substr(3);
     const listener = component[property];
 
+    delete component[property];
+
     component.block.on(events, (e, ...data) => {
       if (e.currentTarget !== e.target) {
         return;
@@ -64,6 +66,8 @@ function loadEvents(component) {
       return;
     }
 
+    delete component[property];
+
     if (loadEvent) {
       setTimeout(() => listener.call(component, loadEvent), 1);
     } else {
@@ -87,6 +91,8 @@ function globalEvents(component) {
     const events = property.split(' on ')[0];
     const listener = component[property];
 
+    delete component[property];
+
     listenerElement.on(events, (...args) => {
       listener.call(component, ...args);
     });
@@ -106,6 +112,8 @@ function elementEvents(component) {
     }
 
     const listener = component[property];
+
+    delete component[property];
 
     component.block.on(events, selectors, function handleEvent(...args) {
       const [event] = args;
